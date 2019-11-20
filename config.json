@@ -1,0 +1,7 @@
+{
+  "database": {
+    "dsn": "mysql:host=localhost;dbname=rzvendors",
+    "user": "root",
+    "pass": null
+  }
+}
