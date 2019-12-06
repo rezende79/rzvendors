@@ -1,0 +1,25 @@
+<div class="modal-body">					
+    <div class="form-group">
+        <label>Company</label>
+
+        <select class="form-control" id="vendorCompany" name="vendorCompany" required>
+        <option value="">Please select</option>
+        {% for company in companies %}
+        <option value="{{ company.cnpj }}" {% if company.cnpj == vendor.company %}selected{% endif %}>{{ company.name }} ({{ company.uf }})</option>
+        {% endfor %}
+        </select>
+
+    </div>
+    <div class="form-group">
+        <label>Name</label>
+        <input type="text" class="form-control" id="vendorName" name="vendorName" value="{{ vendor.name }}" required>
+    </div>
+    <div class="form-group">
+        <label>Document</label>
+        <input type="text" class="form-control" id="vendorDocument" name="vendorDocument" value="{{ vendor.document }}" required>
+    </div>
+    <div class="form-group">
+        <label>Phones</label>
+        <textarea class="form-control" id="vendorPhones" name="vendorPhones">{{ vendor.phones }}</textarea>
+    </div>					
+</div>

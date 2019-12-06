@@ -2,22 +2,21 @@ $(document).ready(function() {
   // Activate tooltip
   $('[data-toggle="tooltip"]').tooltip();
 
-  // Select/Deselect checkboxes
-  var checkbox = $('table tbody input[type="checkbox"]');
-  $("#selectAll").click(function() {
-    if (this.checked) {
-      checkbox.each(function() {
-        this.checked = true;
-      });
-    } else {
-      checkbox.each(function() {
-        this.checked = false;
-      });
-    }
+  // Delete vendor
+  $("#deleteModal").on("show.bs.modal", function(e) {
+    var vendorDocument = $(e.relatedTarget).attr("data-id");
+    document.getElementById("deleteVendorDocument").value = vendorDocument;
   });
-  checkbox.click(function() {
-    if (!this.checked) {
-      $("#selectAll").prop("checked", false);
+
+  // Select filter
+  $("#searchBy").on("change", function(e) {
+    var searchBy = document.getElementById("searchBy").value;
+    if (searchBy == "created_at") {
+      $("#searchFor").mask("0000-00-00");
+      document.getElementById("searchFor").placeholder = "YYYY-MM-DD";
+    } else {
+      $("#searchFor").unmask();
+      document.getElementById("searchFor").placeholder = "Search for...";
     }
   });
 });
