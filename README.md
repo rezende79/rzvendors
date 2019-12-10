@@ -8,6 +8,7 @@ RzVendors is a mini-system based on PHP to manage a [JSON Vendors Database.](htt
 - CSS
 - JavaScript
 - Boostrap
+- Composer
 - Twig
 - PHP
 - JSON
