@@ -1,13 +1,13 @@
 {
-    "require": {
-        "twig/twig": "3.0"
-    },
-    "require-dev": {
-        "phpunit/phpunit": "8"
-    },
-    "autoload": {
-        "psr-4": {
-            "" : ["src/controller", "src/model"]
-        }
+  "require": {
+    "twig/twig": "3.0"
+  },
+  "require-dev": {
+  },
+  "autoload": {
+    "psr-4": {
+      "RzVendors\\Controller\\": "src/controller/",
+      "RzVendors\\Model\\": "src/model/"
     }
+  }
 }

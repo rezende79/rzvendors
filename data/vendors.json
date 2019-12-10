@@ -1,16 +1,23 @@
-{
-    "2": {
-        "company": "35.318.243\/0001-57",
-        "name": "Apeninos Bocai\u00fava Ltda.",
-        "document": "61.606.461\/0001-05",
-        "phones": "(41) 5676-9898",
-        "created_at": "2019-12-06"
-    },
-    "4": {
-        "company": "26.514.896\/0001-10",
+[
+    {
+        "company": "54.355.788\/0001-88",
         "name": "Marcos",
         "document": "08355222709",
         "phones": "",
-        "created_at": "2019-12-06"
+        "created_at": "2019-12-10"
+    },
+    {
+        "company": "26.514.896\/0001-10",
+        "name": "Maria Anders",
+        "document": "61.606.461\/0001-05",
+        "phones": "(41) 99628-7428",
+        "created_at": "2019-12-10"
+    },
+    {
+        "company": "35.318.243\/0001-57",
+        "name": "Astolfo Polemos",
+        "document": "64.447.542\/0001-90",
+        "phones": "",
+        "created_at": "2019-12-10"
     }
-}
+]

@@ -1,88 +1,64 @@
 <?php
-require_once(__DIR__.'/bootstrap.php');
 
-function startsWith($haystack, $needle)
-{
-    $length = strlen($needle);
-    return (substr($haystack, 0, $length) === $needle);
-}
+use \RzVendors\Model\Vendor;
 
-$vendors_json = file_get_contents(__DIR__.'/data/vendors.json');
-$vendors = json_decode($vendors_json, true);
+require_once(__DIR__.'/vendor/autoload.php');
 
-$companies_json = file_get_contents(__DIR__.'/data/companies.json');
-$companies = json_decode($companies_json, true);
+$loader = new Twig\Loader\FilesystemLoader(__DIR__.'/src/view');
+$twig = new Twig\Environment($loader);
+
+$companyLoader = new \RzVendors\Controller\CompanyLoader();
+$vendorManager = new \RzVendors\Controller\VendorManager();
+
+$companies = $companyLoader->getCompanies();
+$vendors = $vendorManager->getVendors();    
 
 $alertMsg = "";
-if (!empty($_GET['do'])) {
-    if ($_GET['do'] == 'search') {
-        if (!empty($_POST['searchFor']) && !empty($_POST['searchBy'])) {
-            $vendorsFiltered = array();
-            $searchFor = $_POST['searchFor'];
-            $searchBy = $_POST['searchBy'];
-            foreach ($vendors as $vendor) {
-                $found = false;
-                if ($searchBy == 'name' && startsWith($vendor['name'], $searchFor)) {
-                    $found = true;
-                } elseif ($searchFor == $vendor[$searchBy]) {
-                    $found = true;
-                }
-                if ($found) {
-                    $vendorsFiltered[] = $vendor;
-                }
-            }
-            $vendors = $vendorsFiltered;
+
+$action = (!empty($_GET['do'])) ? $_GET['do'] : '';
+
+switch ($action) {
+    case 'search':
+        if (!empty($_POST['searchFor'])) {
+            $vendors = $vendorManager->search($_POST['searchFor'], $_POST['searchBy']);
+        } else {
+            $alertMsg = "Please, type your search.";
         }
-    }
-    if ($_GET['do'] == 'add') {
+        break;
+    case 'add':
         if (!empty($_POST['vendorDocument'])) {
-            $vendorDocument = $_POST['vendorDocument'];
-            $vendors[] = [
-                'company' => $_POST['vendorCompany'],
-                'name' => $_POST['vendorName'],
-                'document' => $_POST['vendorDocument'],
-                'phones' => $_POST['vendorPhones'],
-                'created_at' => date('Y-m-d')
-            ];
-            $vendors_json = json_encode($vendors, JSON_PRETTY_PRINT, 2);
-            file_put_contents(__DIR__.'/data/vendors.json', $vendors_json);
-            $alertMsg = "Vendor $vendorDocument was created.";
+            $vendor = new Vendor(
+                $_POST['vendorCompany'],
+                $_POST['vendorName'],
+                $_POST['vendorDocument'],
+                $_POST['vendorPhones'],
+                date('Y-m-d')
+            );
+            $vendors = $vendorManager->add($vendor);
+            $alertMsg = "Vendor ".$_POST['vendorDocument']." was created.";
         }
-    }
-    if ($_GET['do'] == 'edit') {
+        break;
+    case 'edit':
         if (!empty($_POST['vendorDocument'])) {
-            $vendorDocument = $_POST['vendorDocument'];
-            foreach ($vendors as $key => $value) {
-                if ($value['document'] == $vendorDocument) {
-                    $vendors[$key]['company'] = $_POST['vendorCompany'];
-                    $vendors[$key]['name'] = $_POST['vendorName'];
-                    $vendors[$key]['phones'] = $_POST['vendorPhones'];
-                    break;
-                }
-            }
-            $vendors_json = json_encode($vendors, JSON_PRETTY_PRINT, 2);
-            file_put_contents(__DIR__.'/data/vendors.json', $vendors_json);            
-            $alertMsg = "Vendor $vendorDocument was edited.";
+            $vendors = $vendorManager->edit(
+                $_POST['vendorDocument'],
+                $_POST['vendorCompany'],
+                $_POST['vendorName'],
+                $_POST['vendorPhones']
+            );
+            $alertMsg = "Vendor ".$_POST['vendorDocument']." was edited.";
         }
-    }
-    if ($_GET['do'] == 'delete') {
+        break;
+    case 'delete':
         if (!empty($_POST['deleteVendorDocument'])) {
-            $vendorDocument = $_POST['deleteVendorDocument'];
-            foreach ($vendors as $key => $value) {
-                if ($value['document'] == $vendorDocument) {
-                    unset($vendors[$key]);
-                    break;
-                }
-            }
-            $vendors_json = json_encode($vendors, JSON_PRETTY_PRINT, 2);
-            file_put_contents(__DIR__.'/data/vendors.json', $vendors_json);            
-            $alertMsg = "Vendor $vendorDocument was deleted.";
+            $vendors = $vendorManager->delete($_POST['deleteVendorDocument']);
+            $alertMsg = "Vendor ".$_POST['deleteVendorDocument']." was deleted.";
         }
-    }
+        break;
 }
 
 echo $twig->render('index.twig', [
-            'alertMsg' => $alertMsg,
-            'vendors' => $vendors,
-            'companies' => $companies
-        ]);
+    'alertMsg' => $alertMsg,
+    'vendors' => $vendors,
+    'companies' => $companies
+    ]);
